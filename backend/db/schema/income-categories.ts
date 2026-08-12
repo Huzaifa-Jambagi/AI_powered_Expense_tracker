@@ -8,7 +8,7 @@ import {
 import { users } from "./users";
 
 export const incomeCategories = pgTable("income_categories", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: varchar("id", { length: 16 }).primaryKey(),
 
   userId: uuid("user_id")
     .notNull()

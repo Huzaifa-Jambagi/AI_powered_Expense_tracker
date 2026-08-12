@@ -4,13 +4,15 @@ import {
   numeric,
   text,
   timestamp,
+  date,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 import { users } from "./users";
 import { expenseCategories } from "./expense-categories";
 
 export const expenses = pgTable("expenses", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: varchar("id", { length: 16 }).primaryKey(),
 
   userId: uuid("user_id")
     .notNull()
@@ -31,9 +33,7 @@ export const expenses = pgTable("expenses", {
 
   note: text("note"),
 
-  expenseDate: timestamp("expense_date", {
-    withTimezone: true,
-  }).notNull(),
+  expenseDate: date("expense_date").notNull(),
 
   createdAt: timestamp("created_at", {
     withTimezone: true,
