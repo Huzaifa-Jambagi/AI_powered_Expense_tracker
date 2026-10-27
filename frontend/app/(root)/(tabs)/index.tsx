@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 
 const Index = () => {
     return (
-            <View>
+            <View className=''>
                 <Text>index</Text>
             </View>
     )
