@@ -13,7 +13,7 @@ if (!publishableKey) {
 
 export default function RootLayout() {
   return (
-    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}   __experimental_rethrowOfflineNetworkErrors>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache} >
         <Slot />
     </ClerkProvider>
   )
