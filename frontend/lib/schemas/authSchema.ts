@@ -17,13 +17,13 @@ export const signInSchema = z.object({
     .email("Enter a valid email.")
     .trim()
     .min(1, "Email is required."),
-  password: z.string().min(6, "Password must be at least 6 characters."),
+  password: z.string().min(8, "Password must be at least 8 characters."),
 });
 
-export const codeSchema = z.object({
-  code: z.string().min(1, "Enter the verification code."),
+export const otpSchema = z.object({
+  otp: z.string().min(1, "Enter the verification code."),
 });
 
-export type CodeFormValues = z.infer<typeof codeSchema>;
+export type otpFormValues = z.infer<typeof otpSchema>;
 export type SignUpFormSchema = z.infer<typeof signUpSchema>;
 export type SignInFormSchema = z.infer<typeof signInSchema>;

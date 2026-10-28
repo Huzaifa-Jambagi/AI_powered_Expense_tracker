@@ -3,7 +3,10 @@ import { tokenCache } from '@clerk/expo/token-cache'
 import { Slot } from 'expo-router'
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../global.css"
+import * as SplashScreen from "expo-splash-screen";
 
+
+SplashScreen.preventAutoHideAsync().catch(console.warn);
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 
 
@@ -20,3 +23,5 @@ export default function RootLayout() {
     </ClerkProvider>
   )
 }
+
+

@@ -36,34 +36,36 @@ export default function SignUpScreen() {
     },
   });
 
-  const onSignUpPress = async (values: SignUpFormSchema) => {
-    try {
-      setEmail(values.email);
+const onSignUpPress = async (values: SignUpFormSchema) => {
+  try {
+    const { error } = await signUp.password({
+      firstName: values.firstName,
+      lastName: values.lastName,
+      emailAddress: values.email,
+      password: values.password,
+    });
 
-      const { error } = await signUp.password({
-        firstName: values.firstName,
-        lastName: values.lastName,
-        emailAddress: values.email,
-        password: values.password
-      })
-
-      if (error) {
-        console.log(error)
-        alert(error)
-        return
-      }
-      if (!error) {
-        signUp.verifications.sendEmailCode()
-        alert("success")
-      }
-      router.push("/otp")
-
-    } catch (error) {
-      alert(error)
+    if (error) {
+      alert(error.message);
+      return;
     }
 
-  }
+    const { error: sendError } =
+      await signUp.verifications.sendEmailCode();
 
+    if (sendError) {
+      alert(sendError.message);
+      return;
+    }
+
+    router.push({
+      pathname: "/otp",
+      params: { email: values.email },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <KeyboardAvoidingView

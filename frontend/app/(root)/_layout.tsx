@@ -1,18 +1,17 @@
-import { Slot } from 'expo-router'
-import { Redirect } from "expo-router";
-import { useAuth } from '@clerk/expo'
+import { Slot, Redirect } from "expo-router";
+import { useAuth } from "@clerk/expo";
+import DashboardSkeleton from "../../components/Dashboard/DashboardSkeleton";
 
-export default function RootLayout() {
-     const { isLoaded, isSignedIn } = useAuth()
-    
-      if(!isLoaded){
-        return null;
-      }
-      if (!isSignedIn) {
-        return <Redirect href="/(auth)/signup" />;
-      }
-    
-  return (
-  <Slot/>
-  )
+export default function RootGroupLayout() {
+  const { isLoaded, isSignedIn } = useAuth();
+  
+  if (!isLoaded) {
+    return <DashboardSkeleton />;
+  }
+
+  if (!isSignedIn) {
+    return <Redirect href="/(auth)/signIn" />;
+  }
+
+  return <Slot />;
 }
