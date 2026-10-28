@@ -3,6 +3,7 @@ node_modules/
 **/node_modules/
 
 # Environment variables and secrets
+frontend/.env
 .env
 .env.*
 !.env.example

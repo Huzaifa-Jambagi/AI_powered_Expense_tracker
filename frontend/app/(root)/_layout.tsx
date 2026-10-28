@@ -9,7 +9,7 @@ export default function RootLayout() {
         return null;
       }
       if (!isSignedIn) {
-        return <Redirect href="/(auth)/signIn" />;
+        return <Redirect href="/(auth)/signup" />;
       }
     
   return (

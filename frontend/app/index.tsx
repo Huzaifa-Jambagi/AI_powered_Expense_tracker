@@ -9,9 +9,7 @@ export default function Index() {
   
 
   if(!isLoaded){
-    // return null;
-    return <Redirect href="/(auth)/signup" />;
-  }
+    return null;  }
   if (isSignedIn) {
     return <Redirect href="/(root)/(tabs)" />;
   }
