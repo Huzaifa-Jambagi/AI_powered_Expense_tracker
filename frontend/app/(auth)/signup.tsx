@@ -1,7 +1,18 @@
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
-import { Text, View, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+
+import { useSignInWithGoogle } from "@clerk/expo/google";
 import { useSignUp, useAuth } from "@clerk/expo";
 import { Link, useRouter } from "expo-router";
 import Logo from "../../assets/Logo.svg";
@@ -11,15 +22,13 @@ import {
   signUpSchema,
   type SignUpFormSchema,
 } from "../../lib/schemas/authSchema";
-import { KeyboardAvoidingView, Platform } from "react-native";
-
 export default function SignUpScreen() {
   const { signUp, errors, fetchStatus } = useSignUp();
-  const { isSignedIn } = useAuth();
   const router = useRouter();
 
   let isLoading = fetchStatus === "fetching";
   const [email, setEmail] = useState("");
+  const { startGoogleAuthenticationFlow } = useSignInWithGoogle();
 
   const {
     control,
@@ -35,6 +44,37 @@ export default function SignUpScreen() {
       password: "",
     },
   });
+
+const handleGoogleSignUp = async () => {
+  try {
+    const { createdSessionId, setActive } = await startGoogleAuthenticationFlow();
+
+    if (createdSessionId && setActive) {
+      await setActive({ session: createdSessionId });
+      router.replace("/");
+    } else {
+      Alert.alert(
+        "Sign-up incomplete",
+        "Google authentication did not create a session."
+      );
+    }
+  } catch (err: any) {
+    if (
+      err.code === "SIGN_IN_CANCELLED" ||
+      err.code === "-5"
+    ) {
+      return;
+    }
+
+    console.error("Google sign-up error:", err);
+
+    Alert.alert(
+      "Google sign-up failed",
+      err.message || "An error occurred during Google authentication."
+    );
+  }
+};
+
 
 const onSignUpPress = async (values: SignUpFormSchema) => {
   try {
@@ -58,10 +98,13 @@ const onSignUpPress = async (values: SignUpFormSchema) => {
       return;
     }
 
-    router.push({
-      pathname: "/otp",
-      params: { email: values.email },
-    });
+     router.push({
+          pathname: "/otp",
+          params: {
+            email: values.email,
+            flow: "sign-up",
+          },
+        });
   } catch (error) {
     console.error(error);
   }
@@ -216,9 +259,7 @@ const onSignUpPress = async (values: SignUpFormSchema) => {
         </View>
 
         <TouchableOpacity
-          onPress={() => {
-            // Add Google sign-up logic here
-          }}
+          onPress={handleGoogleSignUp}
           className="flex-row items-center justify-center border border-[#E0E2DC] bg-white rounded-xl py-4 mb-4 gap-1"
         >
           <GoogleLogo width={20} height={20} />
