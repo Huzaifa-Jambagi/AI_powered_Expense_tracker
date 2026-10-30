@@ -59,20 +59,19 @@ const handleGoogleSignUp = async () => {
       );
     }
   } catch (err: any) {
-    if (
-      err.code === "SIGN_IN_CANCELLED" ||
-      err.code === "-5"
-    ) {
-      return;
-    }
+  console.log("========== GOOGLE AUTH ERROR ==========");
+  console.log("Message:", err?.message);
+  console.log("Code:", err?.code);
+  console.log("Status:", err?.status);
+  console.log("Clerk errors:", JSON.stringify(err?.errors, null, 2));
+  console.log("Full error:", JSON.stringify(err, null, 2));
+  console.log("========================================");
 
-    console.error("Google sign-up error:", err);
-
-    Alert.alert(
-      "Google sign-up failed",
-      err.message || "An error occurred during Google authentication."
-    );
-  }
+  Alert.alert(
+    "Google sign-up failed",
+    err?.message || "Unknown authentication error"
+  );
+}
 };
 
 
